@@ -13,26 +13,28 @@ function Weather() {
 
     useEffect(() => {
         window.navigator.geolocation.getCurrentPosition((res) => {
-          const { latitude, longitude } = res.coords;
+            const { latitude, longitude } = res.coords;
             sendRequest(
                 `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=0f328458436cb65875a7ed1032336221&units=metric`
             );
         }, console.log);
-    });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     async function sendRequest(request) {
-      console.log(request);
         await fetch(request)
             .then((response) => {
                 if (response.ok) {
-                  console.log(response);
                     return response.json();
-                } else if (response.status === 404 || response.status === 404) {
+                } else if (response.status === 400 || response.status === 404) {
                     setRedCode(true);
                     setErrMsg("Aw Oww! Something went wrong");
+                } else if (response.status >= 429) {
+                    setRedCode(true);
+                    setErrMsg(response.statusText);
                 } else {
                     setRedCode(true);
-                    setErrMsg("Please enter your location"); //Location not found!
+                    setErrMsg("Location not found!");
                 }
             })
             .then((response) => {
@@ -41,6 +43,7 @@ function Weather() {
             })
             .catch((e) => console.log(e));
         await setIsLoading(false);
+        await setLocation("");
     }
 
     if (isLoading) {
@@ -50,7 +53,7 @@ function Weather() {
                 <AiOutlineLoading3Quarters className="load-rotate" />
             </div>
         );
-    } 
+    }
     if (redCode) {
         return (
             <div className="card">
@@ -96,7 +99,7 @@ function Weather() {
                         className="btn-search"
                         onClick={() =>
                             sendRequest(
-                                `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=&units=metric`
+                                `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0f328458436cb65875a7ed1032336221&units=metric`
                             )
                         }
                     >
