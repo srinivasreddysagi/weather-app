@@ -1,0 +1,129 @@
+*,
+*::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+:root {
+    --clr-green: hsl(112.2, 73.53%, 73.33%);
+    --clr-green-a: hsla(112.2, 73.53%, 73.33%, 0.5);
+    --clr-blue: hsl(207.93, 100%, 42.55%);
+    --clr-blue-a: hsla(207.93, 100%, 42.55%, 0.5);
+    --clr-cyan: hsl(188.57, 42.51%, 51.57%);
+}
+
+.card {
+    width: 100%;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-container {
+    width: 75%;
+    max-width: 35rem;
+    margin-top: 2rem;
+    position: relative;
+}
+
+.search {
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 1rem;
+    width: 100%;
+    border: 2px solid var(--clr-cyan);
+    border-radius: 1.6rem;
+    padding: 1rem 1.5rem;
+}
+
+.search::placeholder {
+    color: var(--clr-cyan);
+}
+
+.btn-search {
+    background-color: transparent;
+    color: var(--clr-cyan);
+    font-size: 1.6rem;
+    border: 0;
+    position: absolute;
+    right: 0.8rem;
+    top: 0.8rem;
+}
+
+.result {
+    background: rgba(175, 255, 220, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(1.2px);
+    -webkit-backdrop-filter: blur(1.2px);
+    border: 1px solid rgba(175, 255, 220, 0.15);
+    width: 85%;
+    max-width: 50rem;
+    margin-top: 6rem;
+    padding: 1rem;
+}
+
+.city {
+    margin: 0.5rem 0.5rem 2rem 1rem;
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    gap: 0.4rem;
+}
+
+.temp {
+    height: 10rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.temp h1 {
+    font-size: 3rem;
+}
+
+.temp span {
+    position: absolute;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    margin-left: 0.2rem;
+}
+
+.stats {
+    height: 6rem;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.bar {
+    margin-top: 0.5rem;
+    border: 1px solid var(--clr-cyan);
+    width: 4rem;
+}
+
+.min,
+.humid,
+.max {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.min h2,
+.humid h2,
+.max h2 {
+    margin-top: 1rem;
+}
+
+.min span,
+.humid span,
+.max span {
+    position: absolute;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+    margin-left: 0.1rem;
+}
