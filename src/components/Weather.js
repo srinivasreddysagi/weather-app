@@ -5,19 +5,30 @@ import { MdLocationPin } from "react-icons/md";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 function Weather() {
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [location, setLocation] = useState("");
     const [redCode, setRedCode] = useState(false);
     const [data, setData] = useState(null);
     const [errMsg, setErrMsg] = useState("Please enter your location");
 
     useEffect(() => {
-        window.navigator.geolocation.getCurrentPosition((res) => {
-            const { latitude, longitude } = res.coords;
-            sendRequest(
-                `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=0f328458436cb65875a7ed1032336221&units=metric`
-            );
-        }, console.log);
+        window.navigator.geolocation.getCurrentPosition(
+            (res) => {
+                const { latitude, longitude } = res.coords;
+                setIsLoading(true);
+                sendRequest(
+                    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=0f328458436cb65875a7ed1032336221&units=metric`
+                );
+            },
+            (e) => {
+                if (e.PERMISSION_DENIED === 1) {
+                    setRedCode(true);
+                    setErrMsg(
+                        "Please enter your location or consent to know your location"
+                    );
+                }
+            }
+        );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -25,16 +36,18 @@ function Weather() {
         await fetch(request)
             .then((response) => {
                 if (response.ok) {
+                    setRedCode(false);
                     return response.json();
                 } else if (response.status === 400 || response.status === 404) {
+                    console.log(response);
                     setRedCode(true);
-                    setErrMsg("Aw Oww! Something went wrong");
+                    setErrMsg("Location not found!");
                 } else if (response.status >= 429) {
                     setRedCode(true);
                     setErrMsg(response.statusText);
                 } else {
                     setRedCode(true);
-                    setErrMsg("Location not found!");
+                    setErrMsg("Aw Oww! Something went wrong");
                 }
             })
             .then((response) => {
@@ -82,7 +95,6 @@ function Weather() {
             </div>
         );
     }
-
     return (
         <>
             <div className="card">
@@ -97,24 +109,26 @@ function Weather() {
                     />
                     <button
                         className="btn-search"
-                        onClick={() =>
+                        onClick={() => {
+                            setIsLoading(true);
                             sendRequest(
                                 `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0f328458436cb65875a7ed1032336221&units=metric`
-                            )
-                        }
+                            );
+                        }}
                     >
                         <FaSearchLocation />
                     </button>
                 </div>
                 <div className="result">
                     <p className="city">
-                        <MdLocationPin /> {`${data.name}, ${data.sys.country}`}
+                        <MdLocationPin />{" "}
+                        {`${data?.name}, ${data?.sys?.country}`}
                     </p>
                     <div className="temp">
                         <h3>Temperature</h3>
                         <div className="bar long"></div>
                         <h1>
-                            {data.main.temp} <span>°C</span>
+                            {data?.main?.temp} <span>°C</span>
                         </h1>
                     </div>
                     <div className="stats">
@@ -122,21 +136,21 @@ function Weather() {
                             <h4>Minimum</h4>
                             <div className="bar"></div>
                             <h2>
-                                {data.main.temp_min} <span>°C</span>
+                                {data?.main?.temp_min} <span>°C</span>
                             </h2>
                         </div>
                         <div className="humid">
                             <h4>Humidity</h4>
                             <div className="bar"></div>
                             <h2>
-                                {data.main.humidity} <span>%</span>
+                                {data?.main?.humidity} <span>%</span>
                             </h2>
                         </div>
                         <div className="max">
                             <h4>Maximum</h4>
                             <div className="bar"></div>
                             <h2>
-                                {data.main.temp_max} <span>°C</span>
+                                {data?.main?.temp_max} <span>°C</span>
                             </h2>
                         </div>
                     </div>

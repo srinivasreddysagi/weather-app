@@ -137,5 +137,8 @@ h4,
 }
 
 .error {
-    margin-top: 20rem;
+    padding: 2.5rem;
+    text-align: center;
+    margin-top: 12rem;
+    line-height: 2rem;
 }
