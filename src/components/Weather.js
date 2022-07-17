@@ -2,46 +2,82 @@ import { useEffect, useState } from "react";
 import "./Weather.css";
 import { FaSearchLocation } from "react-icons/fa";
 import { MdLocationPin } from "react-icons/md";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 function Weather() {
-    const [location, setLocation] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [location, setLocation] = useState("");
     const [redCode, setRedCode] = useState(false);
-    const [origin, setOrigin] = useState(null);
     const [data, setData] = useState(null);
-    const [errMsg, setErrMsg] = useState('Aw Oww! Something went wrong');
+    const [errMsg, setErrMsg] = useState("Please enter your location");
 
     useEffect(() => {
-      window.navigator.geolocation.getCurrentPosition(console.log, console.log);
+        window.navigator.geolocation.getCurrentPosition((res) => {
+          const { latitude, longitude } = res.coords;
+            sendRequest(
+                `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=0f328458436cb65875a7ed1032336221&units=metric`
+            );
+        }, console.log);
+    });
 
-      fetch(
-          `http://api.openweathermap.org/geo/1.0/direct?q=&limit=5&appid=`
-      )
-          .then()
-          .then() 
-          .catch();
-    }, []);
-
-    function sendRequest() {
-      fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=$location&appid=APIkey&units=metric`
-      ).then((response)=> {
-        if(response.ok) {
-          return response.json();
-        } else {
-          setRedCode(true);
-        }
-      }
-      ).then((response) => {
-        if(response.status === 404) {
-          setErrMsg('Location not found!');
-        }
-      }).catch((e)=>console.log(e))
+    async function sendRequest(request) {
+      console.log(request);
+        await fetch(request)
+            .then((response) => {
+                if (response.ok) {
+                  console.log(response);
+                    return response.json();
+                } else if (response.status === 404 || response.status === 404) {
+                    setRedCode(true);
+                    setErrMsg("Aw Oww! Something went wrong");
+                } else {
+                    setRedCode(true);
+                    setErrMsg("Please enter your location"); //Location not found!
+                }
+            })
+            .then((response) => {
+                setData(response);
+                console.log(data);
+            })
+            .catch((e) => console.log(e));
+        await setIsLoading(false);
     }
 
-    if(redCode) {
-      return(
-        <p className="error">{errMsg}</p>
-      );
+    if (isLoading) {
+        return (
+            <div className="loading">
+                <h1>Loading...</h1>
+                <AiOutlineLoading3Quarters className="load-rotate" />
+            </div>
+        );
+    } 
+    if (redCode) {
+        return (
+            <div className="card">
+                <div className="input-container">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Location"
+                        className="search"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                    />
+                    <button
+                        className="btn-search"
+                        onClick={() => {
+                            setIsLoading(true);
+                            sendRequest(
+                                `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0f328458436cb65875a7ed1032336221&units=metric`
+                            );
+                        }}
+                    >
+                        <FaSearchLocation />
+                    </button>
+                </div>
+                <h3 className="error">{errMsg}</h3>
+            </div>
+        );
     }
 
     return (
@@ -56,19 +92,26 @@ function Weather() {
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                     />
-                    <button className="btn-search">
+                    <button
+                        className="btn-search"
+                        onClick={() =>
+                            sendRequest(
+                                `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=&units=metric`
+                            )
+                        }
+                    >
                         <FaSearchLocation />
                     </button>
                 </div>
                 <div className="result">
                     <p className="city">
-                        <MdLocationPin /> Hyderabad
+                        <MdLocationPin /> {`${data.name}, ${data.sys.country}`}
                     </p>
                     <div className="temp">
                         <h3>Temperature</h3>
                         <div className="bar long"></div>
                         <h1>
-                            29 <span>°C</span>
+                            {data.main.temp} <span>°C</span>
                         </h1>
                     </div>
                     <div className="stats">
@@ -76,21 +119,21 @@ function Weather() {
                             <h4>Minimum</h4>
                             <div className="bar"></div>
                             <h2>
-                                26 <span>°C</span>
+                                {data.main.temp_min} <span>°C</span>
                             </h2>
                         </div>
                         <div className="humid">
                             <h4>Humidity</h4>
                             <div className="bar"></div>
                             <h2>
-                                98 <span>%</span>
+                                {data.main.humidity} <span>%</span>
                             </h2>
                         </div>
                         <div className="max">
                             <h4>Maximum</h4>
                             <div className="bar"></div>
                             <h2>
-                                34 <span>°C</span>
+                                {data.main.temp_max} <span>°C</span>
                             </h2>
                         </div>
                     </div>

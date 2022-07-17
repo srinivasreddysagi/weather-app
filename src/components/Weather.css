@@ -127,3 +127,15 @@
     margin-top: 0.2rem;
     margin-left: 0.1rem;
 }
+
+h1,
+h2,
+h3,
+h4,
+.error {
+    color: hsl(198.75, 20%, 25.69%);
+}
+
+.error {
+    margin-top: 20rem;
+}

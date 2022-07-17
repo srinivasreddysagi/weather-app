@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap");
 
 body {
     background: var(--clr-green);
     background: linear-gradient(
         45deg,
-         var(--clr-green-a) 0%,
+        var(--clr-green-a) 0%,
         var(--clr-blue-a) 100%
     );
     background-repeat: no-repeat;
@@ -16,7 +16,7 @@ body {
         "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
 }
 
 code {
@@ -42,4 +42,26 @@ code {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.loading {
+    width: 100%;
+    text-align: center;
+    margin-top: 20rem;
+}
+
+.load-rotate {
+    color: hsl(198.75, 20%, 20.69%);
+    width: 2rem;
+    height: 2rem;
+    animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
 }
