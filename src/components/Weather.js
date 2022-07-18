@@ -37,6 +37,7 @@ function Weather() {
             .then((response) => {
                 if (response.ok) {
                     setRedCode(false);
+                    setLocation("");
                     return response.json();
                 } else if (response.status === 400 || response.status === 404) {
                     setRedCode(true);
@@ -66,39 +67,7 @@ function Weather() {
             </div>
         );
     }
-    // if (redCode) {
-    //     return (
-    //         <div className="card">
-    //             <div className="input-container">
-    //                 <input
-    //                     type="text"
-    //                     name="search"
-    //                     placeholder="Location"
-    //                     className="search"
-    //                     value={location}
-    //                     onChange={(e) => setLocation(e.target.value)}
-    //                 />
-    //                 <button
-    //                     className="btn-search"
-    //                     onClick={() => {
-    //                         setIsLoading(true);
-    //                         if(location.trim() !== '') {
-    //                             sendRequest(
-    //                             `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0f328458436cb65875a7ed1032336221&units=metric`
-    //                         );
-    //                         } else {
-    //                             alert("Input field ")
-    //                         }
-    //                     }}
-    //                 >
-    //                     <FaSearchLocation />
-    //                 </button>
-    //                 <p className="err">{}</p>
-    //             </div>
-    //             <h3 className="error">{errMsg}</h3>
-    //         </div>
-    //     );
-    // }
+
     return (
         <>
             <div className="card">
@@ -110,24 +79,30 @@ function Weather() {
                         className="search"
                         value={location}
                         onChange={(e) => {
-                            setRedCode(false);
                             setLocation(e.target.value);
                         }}
                     />
                     <button
                         className="btn-search"
                         onClick={() => {
-                            setIsLoading(true);
-                            sendRequest(
-                                `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0f328458436cb65875a7ed1032336221&units=metric`
-                            );
+                            if(location.trim() !== '') {
+                                setIsLoading(true);
+                                sendRequest(
+                                    `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0f328458436cb65875a7ed1032336221&units=metric`
+                                );
+                            } else {
+                                setRedCode(true);
+                                setErrMsg(
+                                    "Please enter your location"
+                                );
+                            }
                         }}
                     >
                         <FaSearchLocation />
                     </button>
                     <small className="error">{redCode ? errMsg : null}</small>
                 </div>
-                <div className="result">
+                <div className={redCode ? "result hide" : "result"}>
                     <p className="city">
                         <MdLocationPin />{" "}
                         {`${data?.name}, ${data?.sys?.country}`}
@@ -141,25 +116,25 @@ function Weather() {
                     </div>
                     <div className="stats">
                         <div className="min">
-                            <h4>Minimum</h4>
+                            <h5>Minimum</h5>
                             <div className="bar"></div>
-                            <h2>
+                            <h3>
                                 {data?.main?.temp_min} <span>°C</span>
-                            </h2>
+                            </h3>
                         </div>
                         <div className="humid">
-                            <h4>Humidity</h4>
+                            <h5>Humidity</h5>
                             <div className="bar"></div>
-                            <h2>
+                            <h3>
                                 {data?.main?.humidity} <span>%</span>
-                            </h2>
+                            </h3>
                         </div>
                         <div className="max">
-                            <h4>Maximum</h4>
+                            <h5>Maximum</h5>
                             <div className="bar"></div>
-                            <h2>
+                            <h3>
                                 {data?.main?.temp_max} <span>°C</span>
-                            </h2>
+                            </h3>
                         </div>
                     </div>
                 </div>

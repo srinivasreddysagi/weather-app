@@ -68,6 +68,10 @@
     padding: 1rem;
 }
 
+.result.hide {
+    display: none;
+}
+
 .city {
     margin: 0.5rem 0.5rem 2rem 1rem;
     display: flex;
@@ -114,9 +118,9 @@
     align-items: center;
 }
 
-.min h2,
-.humid h2,
-.max h2 {
+.min h3,
+.humid h3,
+.max h3 {
     margin-top: 1rem;
 }
 
@@ -124,19 +128,23 @@
 .humid span,
 .max span {
     position: absolute;
-    font-size: 0.8rem;
-    margin-top: 0.2rem;
+    font-size: 0.7rem;
+    margin-top: 0.1rem;
     margin-left: 0.1rem;
 }
 
 h1,
 h2,
 h3,
-h4 {
+h5 {
     color: hsl(198.75, 20%, 25.69%);
 }
 
 .error {
-    color: var(--clr-err);
+    color: hsl(0, 82.76%, 65.88%);
+    font-weight: 500;
     margin-top: 0.8rem;
+    position: absolute;
+    left: 1.4rem;
+    top: 3.2rem;
 }
