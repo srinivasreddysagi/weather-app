@@ -13,6 +13,7 @@
     --clr-blue: hsl(207.93, 100%, 42.55%);
     --clr-blue-a: hsla(207.93, 100%, 42.55%, 0.5);
     --clr-cyan: hsl(188.57, 42.51%, 51.57%);
+    --clr-err: hsl(358.41, 100%, 55.69%);
 }
 
 .card {
@@ -131,14 +132,11 @@
 h1,
 h2,
 h3,
-h4,
-.error {
+h4 {
     color: hsl(198.75, 20%, 25.69%);
 }
 
 .error {
-    padding: 2.5rem;
-    text-align: center;
-    margin-top: 12rem;
-    line-height: 2rem;
+    color: var(--clr-err);
+    margin-top: 0.8rem;
 }

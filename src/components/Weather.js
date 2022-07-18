@@ -24,7 +24,7 @@ function Weather() {
                 if (e.PERMISSION_DENIED === 1) {
                     setRedCode(true);
                     setErrMsg(
-                        "Please enter your location or consent to know your location"
+                        "Please enter your location or allow location access"
                     );
                 }
             }
@@ -39,24 +39,23 @@ function Weather() {
                     setRedCode(false);
                     return response.json();
                 } else if (response.status === 400 || response.status === 404) {
-                    console.log(response);
                     setRedCode(true);
                     setErrMsg("Location not found!");
+                    setLocation("");
                 } else if (response.status >= 429) {
                     setRedCode(true);
                     setErrMsg(response.statusText);
+                    setLocation("");
                 } else {
                     setRedCode(true);
-                    setErrMsg("Aw Oww! Something went wrong");
+                    setErrMsg("Please check the location entered");
                 }
             })
             .then((response) => {
                 setData(response);
-                console.log(data);
             })
             .catch((e) => console.log(e));
         await setIsLoading(false);
-        await setLocation("");
     }
 
     if (isLoading) {
@@ -67,34 +66,39 @@ function Weather() {
             </div>
         );
     }
-    if (redCode) {
-        return (
-            <div className="card">
-                <div className="input-container">
-                    <input
-                        type="text"
-                        name="search"
-                        placeholder="Location"
-                        className="search"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                    />
-                    <button
-                        className="btn-search"
-                        onClick={() => {
-                            setIsLoading(true);
-                            sendRequest(
-                                `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0f328458436cb65875a7ed1032336221&units=metric`
-                            );
-                        }}
-                    >
-                        <FaSearchLocation />
-                    </button>
-                </div>
-                <h3 className="error">{errMsg}</h3>
-            </div>
-        );
-    }
+    // if (redCode) {
+    //     return (
+    //         <div className="card">
+    //             <div className="input-container">
+    //                 <input
+    //                     type="text"
+    //                     name="search"
+    //                     placeholder="Location"
+    //                     className="search"
+    //                     value={location}
+    //                     onChange={(e) => setLocation(e.target.value)}
+    //                 />
+    //                 <button
+    //                     className="btn-search"
+    //                     onClick={() => {
+    //                         setIsLoading(true);
+    //                         if(location.trim() !== '') {
+    //                             sendRequest(
+    //                             `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0f328458436cb65875a7ed1032336221&units=metric`
+    //                         );
+    //                         } else {
+    //                             alert("Input field ")
+    //                         }
+    //                     }}
+    //                 >
+    //                     <FaSearchLocation />
+    //                 </button>
+    //                 <p className="err">{}</p>
+    //             </div>
+    //             <h3 className="error">{errMsg}</h3>
+    //         </div>
+    //     );
+    // }
     return (
         <>
             <div className="card">
@@ -105,7 +109,10 @@ function Weather() {
                         placeholder="Location"
                         className="search"
                         value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        onChange={(e) => {
+                            setRedCode(false);
+                            setLocation(e.target.value);
+                        }}
                     />
                     <button
                         className="btn-search"
@@ -118,6 +125,7 @@ function Weather() {
                     >
                         <FaSearchLocation />
                     </button>
+                    <small className="error">{redCode ? errMsg : null}</small>
                 </div>
                 <div className="result">
                     <p className="city">
