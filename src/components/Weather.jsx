@@ -85,16 +85,15 @@ function Weather() {
                     <button
                         className="btn-search"
                         onClick={() => {
-                            if(location.trim() !== '') {
+                            if (location.trim() !== "") {
                                 setIsLoading(true);
                                 sendRequest(
                                     `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0f328458436cb65875a7ed1032336221&units=metric`
                                 );
                             } else {
                                 setRedCode(true);
-                                setErrMsg(
-                                    "Please enter your location"
-                                );
+                                setErrMsg("Location cannot be empty");
+                                setLocation("");
                             }
                         }}
                     >
